@@ -1,0 +1,6 @@
+language: java
+jdk:
+  - oraclejdk8
+notifications:
+  email:
+    - muthoni90@gmail.com
