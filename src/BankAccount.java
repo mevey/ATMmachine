@@ -6,12 +6,12 @@ public class BankAccount {
     private final ArrayList<Object> transactions;
 
     public BankAccount() {
-        this.balance=0.0;
+        this.balance = 0.0;
         this.transactions = new ArrayList<>();
     }
 
     public double balance() {
-        return this.balance;
+        return this.balance ;
     }
 
     public double makeDeposit(Double amount) {
@@ -21,6 +21,9 @@ public class BankAccount {
     }
 
     public double withdraw(double amount) {
+        if ((this.balance - WITHDRAWAL_FEE)  < amount) {
+            throw new RuntimeException("You do not have enough money in your account to withdraw" + amount);
+        }
         this.balance -= (amount + WITHDRAWAL_FEE);
         this.transactions.add(amount * -1);
         this.transactions.add(WITHDRAWAL_FEE);
