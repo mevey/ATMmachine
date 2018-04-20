@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_atmmachine" default="compile.module.atmmachine">
+  <dirname property="module.atmmachine.basedir" file="${ant.file.module_atmmachine}"/>
+  
+  <property name="module.jdk.home.atmmachine" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.atmmachine" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.atmmachine" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.atmmachine" value="-encoding UTF-8 -source 1.7 -target 1.7 ${compiler.args}"/>
+  
+  <property name="atmmachine.output.dir" value="${module.atmmachine.basedir}/out/production/ATMmachine"/>
+  <property name="atmmachine.testoutput.dir" value="${module.atmmachine.basedir}/out/test/ATMmachine"/>
+  
+  <path id="atmmachine.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="atmmachine.module.production.classpath">
+    <path refid="${module.jdk.classpath.atmmachine}"/>
+  </path>
+  
+  <path id="atmmachine.runtime.production.module.classpath">
+    <pathelement location="${atmmachine.output.dir}"/>
+  </path>
+  
+  <path id="atmmachine.module.classpath">
+    <path refid="${module.jdk.classpath.atmmachine}"/>
+    <pathelement location="${atmmachine.output.dir}"/>
+    <pathelement location="${idea.home}/lib/hamcrest-core-1.3.jar"/>
+    <pathelement location="${idea.home}/lib/junit-4.12.jar"/>
+  </path>
+  
+  <path id="atmmachine.runtime.module.classpath">
+    <pathelement location="${atmmachine.testoutput.dir}"/>
+    <pathelement location="${atmmachine.output.dir}"/>
+    <pathelement location="${idea.home}/lib/hamcrest-core-1.3.jar"/>
+    <pathelement location="${idea.home}/lib/junit-4.12.jar"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.atmmachine">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.atmmachine">
+    <patternset refid="excluded.from.module.atmmachine"/>
+  </patternset>
+  
+  <path id="atmmachine.module.sourcepath">
+    <dirset dir="${module.atmmachine.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  <path id="atmmachine.module.test.sourcepath">
+    <dirset dir="${module.atmmachine.basedir}">
+      <include name="test"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.atmmachine" depends="compile.module.atmmachine.production,compile.module.atmmachine.tests" description="Compile module ATMmachine"/>
+  
+  <target name="compile.module.atmmachine.production" depends="register.custom.compilers" description="Compile module ATMmachine; production classes">
+    <mkdir dir="${atmmachine.output.dir}"/>
+    <javac2 destdir="${atmmachine.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.atmmachine}/javac">
+      <compilerarg line="${compiler.args.atmmachine}"/>
+      <bootclasspath refid="atmmachine.module.bootclasspath"/>
+      <classpath refid="atmmachine.module.production.classpath"/>
+      <src refid="atmmachine.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.atmmachine"/>
+    </javac2>
+    
+    <copy todir="${atmmachine.output.dir}">
+      <fileset dir="${module.atmmachine.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.atmmachine.tests" depends="register.custom.compilers,compile.module.atmmachine.production" description="compile module ATMmachine; test classes" unless="skip.tests">
+    <mkdir dir="${atmmachine.testoutput.dir}"/>
+    <javac2 destdir="${atmmachine.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.atmmachine}/javac">
+      <compilerarg line="${compiler.args.atmmachine}"/>
+      <bootclasspath refid="atmmachine.module.bootclasspath"/>
+      <classpath refid="atmmachine.module.classpath"/>
+      <src refid="atmmachine.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.atmmachine"/>
+    </javac2>
+    
+    <copy todir="${atmmachine.testoutput.dir}">
+      <fileset dir="${module.atmmachine.basedir}/test">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.atmmachine" description="cleanup module">
+    <delete dir="${atmmachine.output.dir}"/>
+    <delete dir="${atmmachine.testoutput.dir}"/>
+  </target>
+</project>
